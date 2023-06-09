@@ -1,10 +1,10 @@
-def DOCKER_IMAGE_NAME = "syua0529/apigateway"
+def DOCKER_HOST = "syua0529"
+def DOCKER_IMAGE_NAME = "apigateway"
 def NAMESPACE = "apigateway"
 def VERSION = "${env.BUILD_NUMBER}"
 
 podTemplate(label: 'builder',
             containers: [
-                containerTemplate(name: 'gradle', image: 'gradle:7.6.1-jdk17', command: 'cat', ttyEnabled: true),
                 containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
                 containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.23.0', command: 'cat', ttyEnabled: true)
             ],
@@ -15,13 +15,7 @@ podTemplate(label: 'builder',
         // clone proejct
         stage('Checkout') {
             checkout scm
-        }
 
-        // test project using gradle
-        stage('Gradle Test and Build') {
-            container('gradle') {
-                sh "gradle clean build"
-            }
         }
 
         // build docker image and push it to docker hub
@@ -32,9 +26,9 @@ podTemplate(label: 'builder',
                     usernameVariable: 'USERNAME',
                     passwordVariable: 'PASSWORD'
                 )]) {
-                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${VERSION} ."
+                    sh "docker build -t ${DOCKER_HOST}/${DOCKER_IMAGE_NAME}:${VERSION} ."
                     sh "docker login -u ${USERNAME} -p ${PASSWORD}"
-                    sh "docker push ${DOCKER_IMAGE_NAME}:${VERSION}"
+                    sh "docker push ${DOCKER_HOST}/${DOCKER_IMAGE_NAME}:${VERSION}"
                 }
             }
         }
