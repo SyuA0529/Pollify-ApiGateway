@@ -5,6 +5,7 @@ def VERSION = "${env.BUILD_NUMBER}"
 
 podTemplate(label: 'builder',
             containers: [
+                containerTemplate(name: 'gradle', image: 'gradle:7.6.1-jdk17', command: 'cat', ttyEnabled: true),
                 containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
                 containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.23.0', command: 'cat', ttyEnabled: true)
             ],
@@ -16,6 +17,13 @@ podTemplate(label: 'builder',
         stage('Checkout') {
             checkout scm
 
+        }
+
+        // test project using gradle
+        stage('Gradle Test and Build') {
+            container('gradle') {
+                sh 'gradle clean build'
+            }
         }
 
         // build docker image and push it to docker hub
