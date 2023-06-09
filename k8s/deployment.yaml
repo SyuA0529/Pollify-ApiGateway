@@ -17,15 +17,15 @@ spec:
           image: syua0529/apigateway
           env:
             - name: MEMBER_SERVICE_ADDR
-              value: "member-service.member-service.svc.cluster.local"
+              value: "memberserver-service.member-service.svc.cluster.local"
             - name: MEMBER_SERVICE_PORT
               value: "8080"
             - name: SURVEY_SERVICE_ADDR
-              value: "survey-service.survey-service.svc.cluster.local"
+              value: "surveyserver-service.survey-service.svc.cluster.local"
             - name: SURVEY_SERVICE_PORT
               value: "8080"
             - name: SURVEY_RESULT_SERVICE_ADDR
-              value: "survey-result-service.survey-result-service.svc.cluster.local"
+              value: "surveyserver-result-service.survey-result-service.svc.cluster.local"
             - name: SURVEY_RESULT_SERVICE_PORT
               value: "8080"
           ports:
