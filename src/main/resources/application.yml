@@ -3,17 +3,23 @@ spring:
     gateway:
       routes:
         - id: member-service
-          uri: http://localhost:10000
+          uri: http://${MEMBER_SERVICE_ADDR}:${MEMBER_SERVICE_PORT}
           predicates:
-            - Path=/auth/*
+            - Path=/api/auth/*
+          filters:
+            - RewritePath=/api/?(?<segment>.*), /$\{segment}
 
-        - id: surveyresult-server
-          uri: http://localhost:30000
+        - id: survey-result-service
+          uri: http://${SURVEY_RESULT_SERVICE_ADDR}:${SURVEY_RESULT_SERVICE_PORT}
           predicates:
-            - Path=/surveys/*/results
+            - Path=/api/surveys/*/results
+          filters:
+            - RewritePath=/api/?(?<segment>.*), /$\{segment}
 
         - id: survey-service
-          uri: http://localhost:20000
+          uri: http://${SURVEY_SERVICE_ADDR}:${SURVEY_SERVICE_PORT}
           predicates:
-            - Path=/surveys*/**
+            - Path=/api/surveys*/**
+          filters:
+            - RewritePath=/api/?(?<segment>.*), /$\{segment}
 
